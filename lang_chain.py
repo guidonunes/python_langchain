@@ -1,7 +1,8 @@
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage
-from my_models import GEMINI_FLASH
-from my_keys import GEMINI_API_KEY
+from langchain_groq import ChatGroq
+from my_models import GEMINI_FLASH, GROQ_VISION_MODEL
+from my_keys import GEMINI_API_KEY, GROQ_API_KEY
 from my_helper import encode_image
 
 
@@ -11,6 +12,18 @@ llm = ChatGoogleGenerativeAI(
     api_key=GEMINI_API_KEY
 )
 
+response = llm.invoke(["What Youtube channel is best for learning about investing?"])
+
+print("Gemini Response:", response.content)
+
+llm = ChatGroq(
+    model=GROQ_VISION_MODEL,
+    api_key=GROQ_API_KEY
+)
+
+response = llm.invoke(["What Youtube channel is best for learning about investing?"])
+
+print("Llama Response:", response.content)
 
 image = encode_image("data/chart_gold.png")
 
@@ -24,7 +37,9 @@ message = HumanMessage(content=[
     },
     {
         "type": "image_url",
-        "image_url": f"data:image/png;base64,{image}"
+        "image_url": {
+            "url": f"data:image/png;base64,{image}"
+        }
     }
 ])
 
