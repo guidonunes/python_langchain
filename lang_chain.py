@@ -4,6 +4,7 @@ from langchain_groq import ChatGroq
 from my_models import GEMINI_FLASH, GROQ_VISION_MODEL
 from my_keys import GEMINI_API_KEY, GROQ_API_KEY
 from my_helper import encode_reduced_image
+from langchain_core.prompts import ChatPromptTemplate
 
 
 
@@ -27,21 +28,34 @@ print("Groq Response:", response.content)
 
 image = encode_reduced_image("data/chart_gold.png")
 
-query = f"""Analyze the following image and provide insights about the data presented in it.
-Image: {image}"""
 
-message = HumanMessage(content=[
-    {
-        "type": "text",
-        "text": query
-    },
-    {
-        "type": "image_url",
-        "image_url": {
-            "url": f"data:image/png;base64,{image}"
-        }
-    }
-])
+template_analyze = ChatPromptTemplate.from_messages(
+    [
+        (
+            "system",
+            """
+            You are an expert data analyst. Analyze the image provided and give detailed insights about the data shown.
+            Your main goal is to help users understand trends, patterns, and significant points in the data.
+            """
+        ),
+        (
+            "user",
+            [
+                {
+                    "type": "text",
+                    "text": "Analyze the following image and provide insights about the data presented in it."
+                },
+                {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": "data:image/png;base64,{image}"
+                    }
+                }
+            ]
+        )
+    ]
+)
+
 
 response = llm.invoke([message])
 
