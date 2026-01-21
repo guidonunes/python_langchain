@@ -3,7 +3,7 @@ from langchain_core.messages import HumanMessage
 from langchain_groq import ChatGroq
 from my_models import GEMINI_FLASH, GROQ_VISION_MODEL
 from my_keys import GEMINI_API_KEY, GROQ_API_KEY
-from my_helper import encode_image
+from my_helper import encode_reduced_image
 
 
 
@@ -23,9 +23,9 @@ llm = ChatGroq(
 
 response = llm.invoke(["What Youtube channel is best for learning about investing?"])
 
-print("Llama Response:", response.content)
+print("Groq Response:", response.content)
 
-image = encode_image("data/chart_gold.png")
+image = encode_reduced_image("data/chart_gold.png")
 
 query = f"""Analyze the following image and provide insights about the data presented in it.
 Image: {image}"""
