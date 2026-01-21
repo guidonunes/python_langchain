@@ -5,6 +5,7 @@ from my_models import GEMINI_FLASH, GROQ_VISION_MODEL
 from my_keys import GEMINI_API_KEY, GROQ_API_KEY
 from my_helper import encode_reduced_image
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
 
 
 
@@ -36,6 +37,13 @@ template_analyze = ChatPromptTemplate.from_messages(
             """
             You are an expert data analyst. Analyze the image provided and give detailed insights about the data shown.
             Your main goal is to help users understand trends, patterns, and significant points in the data.
+
+            # Output Format
+            Provide your analysis in a clear and structured format, including:
+            1. Summary of Findings
+            2. Key Trends
+            3. Notable Data Points
+            4. Recommendations (if applicable)
             """
         ),
         (
@@ -48,7 +56,7 @@ template_analyze = ChatPromptTemplate.from_messages(
                 {
                     "type": "image_url",
                     "image_url": {
-                        "url": "data:image/png;base64,{image}"
+                        "url": "data:image/png;base64,{selected_image}"
                     }
                 }
             ]
@@ -57,6 +65,9 @@ template_analyze = ChatPromptTemplate.from_messages(
 )
 
 
-response = llm.invoke([message])
-
-print(response.content)
+chain = template_analyze | llm | StrOutputParser()
+response = chain.invoke(
+    {
+        "selected_image": image
+    }
+)
