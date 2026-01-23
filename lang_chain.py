@@ -53,4 +53,13 @@ analysis_template = ChatPromptTemplate.from_messages([
 ])
 
 
-chain = sentiment_template | llm_smart | StrOutputParser()
+summary_chain = sentiment_template | llm_fast | StrOutputParser()
+
+analysis_chain = analysis_template | llm_smart | StrOutputParser()
+
+raw_signal = summary_chain.invoke({"headline": headline})
+
+final_analysis = analysis_chain.invoke({
+    "signal_data": raw_signal,
+    "headline": headline
+})
