@@ -6,6 +6,8 @@ from my_keys import GEMINI_API_KEY, GROQ_API_KEY
 from my_helper import encode_reduced_image
 from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
+from langchain_core.globals import set_debug
+set_debug(True)
 
 
 
@@ -65,3 +67,6 @@ final_analysis = analysis_chain.invoke({
     "signal_data": raw_signal,
     "headline": headline
 })
+
+print("Final Analysis:")
+print(final_analysis)
