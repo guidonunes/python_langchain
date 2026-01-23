@@ -20,6 +20,8 @@ llm_smart = ChatGoogleGenerativeAI(
     api_key=GEMINI_API_KEY
 )
 
+headline = "Tech stocks soar as new AI advancements promise to revolutionize the industry"
+
 # CASE: GROQ for sensing, Gemini for reasoning
 sentiment_template = PromptTemplate(
     input_variables=["headline"],
