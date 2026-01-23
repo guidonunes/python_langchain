@@ -51,7 +51,7 @@ analysis_template = ChatPromptTemplate.from_messages([
 
     The original news was: "{headline}"
 
-    Write a short paragraph (3 sentences max) explaining what this means for their portfolio.
+    Write a short paragraph (5 sentences max) explaining what this means for their portfolio.
     Focus on the "Why", not just the "What".
     """)
 ])
