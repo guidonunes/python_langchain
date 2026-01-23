@@ -75,7 +75,8 @@ JSON
 "The surge in tech stocks driven by AI advancements signals a structural shift in productivity. For your portfolio, this validates our overweight position in semiconductor and software infrastructure. We recommend holding current positions to capture long-term compounding, rather than taking immediate profits."
 ```
 
-🔮 Roadmap
+## 🔮 Roadmap
+
 [x] Hybrid Chain Implementation (Groq + Gemini)
 
 [x] JSON Output Parsing
