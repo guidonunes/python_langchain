@@ -7,6 +7,7 @@ set_debug(False)
 from langchain import hub
 from langchain.agents import create_react_agent
 from langchain.tools import Tool
+from market_data_tool import MarketDataTool
 
 
 class Orchestrator:
@@ -16,7 +17,7 @@ class Orchestrator:
             api_key=GEMINI_API_KEY
         )
 
-        market_data_tool = None
+        market_data_tool = MarketDataTool()
 
         self.tools = [
             Tool(
