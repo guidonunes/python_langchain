@@ -6,7 +6,7 @@ set_debug(False)
 
 from langchain import hub
 from langchain.agents import create_react_agent
-from langchain.tools import tool
+from langchain.tools import Tool
 
 
 class Orchestrator:
@@ -19,7 +19,7 @@ class Orchestrator:
         market_data_tool = None
 
         self.tools = [
-            tool(
+            Tool(
                 name= market_data_tool.name,
                 func= market_data_tool.run,
                 description= market_data_tool.description,
