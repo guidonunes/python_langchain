@@ -67,7 +67,7 @@ analysis_template = ChatPromptTemplate.from_messages([
 
 
 
-summary_chain = sentiment_template | llm_fast | StrOutputParser()
+summary_chain = sentiment_template | llm_fast | parser_json
 
 analysis_chain = analysis_template | llm_smart | StrOutputParser()
 
