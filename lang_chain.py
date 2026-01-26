@@ -5,7 +5,7 @@ from my_models import GEMINI_FLASH, GROQ_MODEL
 from my_keys import GEMINI_API_KEY, GROQ_API_KEY
 from my_helper import encode_reduced_image
 from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
-from langchain_core.output_parsers import StrOutputParser, JsonOutputParser
+from langchain_core.output_parsers import StrOutputParser, PydanticOutputParser
 from model_details import ModelDetails
 from langchain_core.globals import set_debug
 set_debug(True)
@@ -24,7 +24,7 @@ llm_smart = ChatGoogleGenerativeAI(
 )
 
 headline = "Tech stocks soar as new AI advancements promise to revolutionize the industry"
-parser_json = JsonOutputParser(pydantic_object=ModelDetails)
+parser_json = PydanticOutputParser(pydantic_object=ModelDetails)
 
 # CASE: GROQ for sensing, Gemini for reasoning
 sentiment_template = PromptTemplate(
