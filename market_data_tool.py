@@ -8,25 +8,28 @@ class MarketDataTool(BaseTool):
     description: str = "Use this tool to get the latest stock price and news for a given ticker symbol (e.g. 'AAPL', 'NVDA'). Returns a summary string."
 
     def _run(self, ticker: str) -> str:
-        """
-        The 'ticker' argument comes from the Agent.
-        It will be something like 'AAPL' or 'BTC-USD'.
-        """
         print(f"\n   [TOOL] 📡 Fetching data for: {ticker}...")
 
         try:
             stock = yf.Ticker(ticker)
 
-            price = stock.fast_info.last_price
+            # 1. Safer Price Check
+            try:
+                price = stock.fast_info.last_price
+            except:
+                # Fallback if fast_info fails
+                price = stock.info.get('regularMarketPrice', 'Unknown')
 
+            # 2. Safer News Check (The part that broke)
             news_title = "No news found"
-            if stock.news:
-                news_title = stock.news[0]['title']
+            try:
+                if stock.news and len(stock.news) > 0:
+                    # Use .get() so it never crashes on missing keys
+                    news_title = stock.news[0].get('title', stock.news[0].get('uuid', 'News found but no title'))
+            except Exception:
+                pass # Ignore news errors, just return price
 
-            return f"Data for {ticker}: Price is ${price:.2f}. Latest News: '{news_title}'"
+            return f"Data for {ticker}: Price is ${price}. Latest News: '{news_title}'"
 
         except Exception as e:
             return f"Error fetching data for {ticker}: {e}"
-
-    def _arun(self, ticker: str):
-        raise NotImplementedError("Async not implemented")
