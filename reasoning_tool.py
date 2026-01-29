@@ -65,7 +65,7 @@ class ReasoningTool(BaseTool):
                 TASK:
                 Write a concise, professional daily update for a wealthy client explaining
                 what this news means for their portfolio. Focus on the strategy ("Why"), not just the news ("What").
-                """
+                """,
                 input_variables=["sentiment", "urgency", "tickers", "headline"]
             )
             # Run Gemini Chain
