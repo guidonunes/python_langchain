@@ -15,7 +15,7 @@ class ReasoningTool(BaseTool):
     description: str = "Use this tool to perform a deep technical and sentimental analysis on a specific "
     "news headline. Input should be the news headline text found by the MarketDataTool."
 
-
+    # GROQ: THE SCALPER
     def _run(self, headline: str) -> str:
         """
         Input: A raw string containing the news headline.
@@ -23,3 +23,26 @@ class ReasoningTool(BaseTool):
         """
 
         print(f"\n   [TOOL] 🤖 Analyzing headline: {headline[:20]}...")
+
+        try:
+            llm_groq = ChatGroq(model=GROQ_MODEL, api_key=GROQ_API_KEY, temperature=0)
+            parser = PydanticOutputParser(pydantic_object=ModelDetails)
+
+            groq_prompt = PromptTemplate(
+                template ="""
+                Analyze the following financial headline.
+                Headline: "{headline}"
+                {format_instructions}
+                """,
+                input_variables=["headline"],
+                partial_variables={"format_instructions": parser.get_format_instructions()}
+            )
+
+            scalper_chain = groq_prompt | llm_groq | parser
+            signal_data: ModelDetails = scalper_chain.invoke({"headline": headline})
+            print(f"  [TOOL] Sentiment Detected: {signal_data.sentiment} (Urgency: {signal_data.urgency}/10)")
+
+
+
+        except Exception as e:
+            return f"Error during analysis (Groq): {e}"
