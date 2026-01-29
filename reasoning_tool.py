@@ -70,3 +70,14 @@ class ReasoningTool(BaseTool):
             )
         except Exception as e:
             return f"Error initializing Gemini LLM: {e}"
+
+        # Run Gemini Chain
+        strategist_chain = gemini_prompt | llm_gemini | StrOutputParser()
+        final_advice = strategist_chain.invoke({
+            "sentiment": signal_data.sentiment,
+            "urgency": signal_data.urgency,
+            "tickers": signal_data.tickers,
+            "headline": headline
+        })
+
+        return final_advice
