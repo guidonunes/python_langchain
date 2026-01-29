@@ -11,11 +11,15 @@ from model_details import ModelDetails
 
 
 class ReasoningTool(BaseTool):
-    name: str = "ReasoningTool"
+    name: str = "Financial_Analyst_Tool"
     description: str = "Use this tool to perform a deep technical and sentimental analysis on a specific "
     "news headline. Input should be the news headline text found by the MarketDataTool."
 
-    return_direct: bool = True
 
-    def _run(self, action):
-        action = ast.literal_eval(action)
+    def _run(self, headline: str) -> str:
+        """
+        Input: A raw string containing the news headline.
+        Output: A strategic portfolio update paragraph.
+        """
+
+        print(f"\n   [TOOL] 🤖 Analyzing headline: {headline[:20]}...")
