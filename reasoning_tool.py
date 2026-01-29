@@ -22,6 +22,9 @@ class ReasoningTool(BaseTool):
         Output: A strategic portfolio update paragraph.
         """
 
+        if "No news found" in headline or "News found but no title" in headline:
+            return "⚠️ DATA ERROR: No valid news headlines found. Cannot perform strategic analysis."
+
         print(f"\n   [TOOL] 🤖 Analyzing headline: {headline[:20]}...")
 
         try:
