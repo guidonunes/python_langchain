@@ -10,26 +10,33 @@ class MarketDataTool(BaseTool):
     def _run(self, ticker: str) -> str:
         print(f"\n   [TOOL] 📡 Fetching data for: {ticker}...")
 
+        if ticker.upper() in ["BTC", "ETH", "SOL"]:
+            ticker = f"{ticker.upper()}-USD"
+
         try:
             stock = yf.Ticker(ticker)
 
-            # 1. Safer Price Check
-            try:
-                price = stock.fast_info.last_price
-            except:
-                # Fallback if fast_info fails
-                price = stock.info.get('regularMarketPrice', 'Unknown')
+            history = stock.history(period="1d")
 
-            # 2. Safer News Check (The part that broke)
+            if history.empty:
+                return f"No data found for ticker: {ticker}. Is the ticker symbol correct?"
+
+            current_price = history['Close'].iloc[-1]
+
             news_title = "No news found"
             try:
-                if stock.news and len(stock.news) > 0:
+                if stock.news:
                     # Use .get() so it never crashes on missing keys
-                    news_title = stock.news[0].get('title', stock.news[0].get('uuid', 'News found but no title'))
-            except Exception:
-                pass # Ignore news errors, just return price
+                    for n in stock.news:
+                        news_title = n['title']
+                        break
+            except:
+                pass
 
-            return f"Data for {ticker}: Price is ${price}. Latest News: '{news_title}'"
+            return f"Data for {ticker}: Price is ${current_price:.2f}. Latest News: '{news_title}'"
 
         except Exception as e:
             return f"Error fetching data for {ticker}: {e}"
+
+    def _arun(self, ticker: str):
+        raise NotImplementedError("Async not implemented")
