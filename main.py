@@ -10,7 +10,11 @@ def main():
         verbose=True
     )
 
-    user_input = "What is the current status of AAPL and TSLA stocks?"
+    user_input = (
+    "Check the latest price and news for BTC. "
+    "THEN, use the Financial Analyst tool to write a strategic sentiment report "
+    "based on that news. I need both the price and the strategy."
+    )
 
     response =orchestrator.invoke({"input": user_input})
 
