@@ -46,3 +46,27 @@ class ReasoningTool(BaseTool):
 
         except Exception as e:
             return f"Error during analysis (Groq): {e}"
+
+        # GEMINI: THE STRATEGIST
+        try:
+            llm_gemini = ChatGoogleGenerativeAI(model=GEMINI_FLASH, api_key=GEMINI_API_KEY)
+            gemini_prompt = PromptTemplate(
+                template="""
+                You are a senior portfolio manager.
+
+                MARKET SIGNAL DATA:
+                - Sentiment: {sentiment}
+                - Urgency Score: {urgency}/10
+                - Affected Tickers: {tickers}
+
+                ORIGINAL NEWS:
+                "{headline}"
+
+                TASK:
+                Write a concise, professional daily update for a wealthy client explaining
+                what this news means for their portfolio. Focus on the strategy ("Why"), not just the news ("What").
+                """
+                input_variables=["sentiment", "urgency", "tickers", "headline"]
+            )
+        except Exception as e:
+            return f"Error initializing Gemini LLM: {e}"
