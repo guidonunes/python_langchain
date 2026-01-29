@@ -17,7 +17,7 @@ class Orchestrator:
             api_key=GEMINI_API_KEY
         )
         self.tools = [
-            MarketDataTool()
+            MarketDataTool(),
             ReasoningTool()
         ]
 
