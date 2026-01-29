@@ -81,3 +81,6 @@ class ReasoningTool(BaseTool):
 
         except Exception as e:
             return f"Error initializing Gemini LLM: {e}"
+
+    def _arun(self, headline: str):
+        raise NotImplementedError(f"Async not implemented for input: {headline}.")
