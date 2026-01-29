@@ -7,6 +7,7 @@ set_debug(False)
 from langchain_classic import hub
 from langchain_classic.agents import create_react_agent
 from market_data_tool import MarketDataTool
+from reasoning_tool import ReasoningTool
 
 
 class Orchestrator:
@@ -17,6 +18,7 @@ class Orchestrator:
         )
         self.tools = [
             MarketDataTool()
+            ReasoningTool()
         ]
 
         prompt = hub.pull("hwchase17/react")
