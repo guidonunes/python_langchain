@@ -42,6 +42,8 @@ class MarketDataTool(BaseTool):
                     news_title = "News currently unavailable due to search limits."
 
             return f"Data for {ticker}: Price is {price}. Latest News: '{news_title}'"
+        except Exception as e:
+            return f"Error fetching data for {ticker}: {e}"
 
 
     def _arun(self, ticker: str):
