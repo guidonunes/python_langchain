@@ -31,11 +31,18 @@ class MarketDataTool(BaseTool):
 
             if news_title == "No news found":
                 print(f"   [TOOL] 🦆 Yahoo failed. Searching DuckDuckGo for {ticker} news...")
-                search = DDGS()
-                news_title = search.run(f"latest financial news for {ticker} today")
+                try:
+                    ddgs = DDGS()
+                    results = list(ddgs.text(f"latest financial news for {ticker} today", max_results=1))
+
+                    if results:
+                        news_title = results[0]['title']
+                except Exception as e:
+                    print(f"   [WARNING] DuckDuckGo failed (likely Rate Limit): {e}")
+                    news_title = "News currently unavailable due to search limits."
+
             return f"Data for {ticker}: Price is {price}. Latest News: '{news_title}'"
-        except Exception as e:
-            return f"Error fetching data for {ticker}: {e}"
+
 
     def _arun(self, ticker: str):
         raise NotImplementedError("Async not implemented")
