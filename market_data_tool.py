@@ -2,7 +2,7 @@
 from langchain.tools import BaseTool
 from typing import Optional, Type
 import yfinance as yf
-from langchain_community.tools import DuckDuckGoSearchRun
+from duckduckgo_search import DDGS
 
 class MarketDataTool(BaseTool):
     name: str = "MarketDataTool"
@@ -31,7 +31,7 @@ class MarketDataTool(BaseTool):
 
             if news_title == "No news found":
                 print(f"   [TOOL] 🦆 Yahoo failed. Searching DuckDuckGo for {ticker} news...")
-                search = DuckDuckGoSearchRun()
+                search = DDGS()
                 news_title = search.run(f"latest financial news for {ticker} today")
             return f"Data for {ticker}: Price is {price}. Latest News: '{news_title}'"
         except Exception as e:
