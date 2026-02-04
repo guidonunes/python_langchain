@@ -1,9 +1,15 @@
 # market_data_tool.py
+import os
 from langchain.tools import BaseTool
 from curl_cffi import requests as crequests
 import yfinance as yf
 from duckduckgo_search import DDGS
 from tavily import TavilyClient
+from dotenv import load_dotenv
+
+load_dotenv()
+
+TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
 
 class MarketDataTool(BaseTool):
     name: str = "MarketDataTool"
@@ -15,38 +21,33 @@ class MarketDataTool(BaseTool):
         if ticker.upper() in ["BTC", "ETH", "SOL"]:
             ticker = f"{ticker.upper()}-USD"
 
-        session = crequests.Session(impersonate="chrome")
+
 
         try:
-            stock = yf.Ticker(ticker, session=session)
+            stock = yf.Ticker(ticker)
             history = stock.history(period="1d")
             price = "Unknown"
             if not history.empty:
                 price = f"${history['Close'].iloc[-1]:.2f}"
-
-            news_title = "No news found"
-
-            try:
-                if stock.news:
-                    news_title = stock.news[0]['title']
-            except:
-                pass
-
-            if news_title == "No news found":
-                print(f"   [TOOL] 🦆 Yahoo failed. Searching DuckDuckGo for {ticker} news...")
-                try:
-                    ddgs = DDGS()
-                    results = list(ddgs.text(f"latest financial news for {ticker} today", max_results=1))
-
-                    if results:
-                        news_title = results[0]['title']
-                except Exception as e:
-                    print(f"   [WARNING] DuckDuckGo failed (likely Rate Limit): {e}")
-                    news_title = "News currently unavailable due to search limits."
-
-            return f"Data for {ticker}: Price is {price}. Latest News: '{news_title}'"
         except Exception as e:
-            return f"Error fetching data for {ticker}: {e}"
+            price = "Error fetching price"
+
+        print(f"   [TOOL] 🔍 Searching news via Tavily for {ticker}...")
+
+        try:
+            client = TavilyClient(api_key=TAVILY_API_KEY)
+            response = client.search(query=f"latest financial news for {ticker} today", limit=1)
+
+            if response['results']:
+                r = response['results'][0]
+                news_title = f"{r['title']} - {r['content'][:100]}..."
+            else:
+                news_title = "No recent news found."
+        except Exception as e:
+            print(f"   [TOOL] ❌ Tavily failed: {e}")
+            news_title = "News unavailable."
+
+        return f"Data for {ticker}: Price is {price}. Latest News: '{news_title}'"
 
 
     def _arun(self, ticker: str):
