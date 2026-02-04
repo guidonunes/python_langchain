@@ -1,7 +1,6 @@
 # market_data_tool.py
 from langchain.tools import BaseTool
-from typing import Optional, Type
-import requests
+from curl_cffi import requests as crequests
 import yfinance as yf
 from duckduckgo_search import DDGS
 
@@ -15,10 +14,7 @@ class MarketDataTool(BaseTool):
         if ticker.upper() in ["BTC", "ETH", "SOL"]:
             ticker = f"{ticker.upper()}-USD"
 
-        session = requests.Session()
-        session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-        })
+        session = crequests.Session(impersonate="chrome")
 
         try:
             stock = yf.Ticker(ticker, session=session)
