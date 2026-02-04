@@ -3,6 +3,7 @@ from langchain.tools import BaseTool
 from curl_cffi import requests as crequests
 import yfinance as yf
 from duckduckgo_search import DDGS
+from tavily import TavilyClient
 
 class MarketDataTool(BaseTool):
     name: str = "MarketDataTool"
