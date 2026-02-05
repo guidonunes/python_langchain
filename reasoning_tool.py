@@ -66,8 +66,10 @@ class ReasoningTool(BaseTool):
                 "{headline}"
 
                 TASK:
-                Write a concise, professional daily update for a wealthy client explaining
-                what this news means for their portfolio. Focus on the strategy ("Why"), not just the news ("What").
+                Use the greeting "Hail my Master"
+                Write a concise, professional but casual daily update for a wealthy client explaining
+                what this news means for their portfolio. Focus on the strategy ("Why"), not just the news ("What") and include actionable insights("How").
+                Final greeting:"May the Force be with you"
                 """,
                 input_variables=["sentiment", "urgency", "tickers", "headline"]
             )
